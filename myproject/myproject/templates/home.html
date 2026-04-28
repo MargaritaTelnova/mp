@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Добро пожаловать на наш сайт!</h1>
+    {% if user.is_authenticated %}
+        <p class="lead">Привет, {{ user.first_name|default:user.username }}! Вы успешно вошли в систему.</p>
+        <hr class="my-4">
+        <p>Это ваша главная страница. Здесь вы можете управлять своим профилем и просматривать контент.</p>
+        <a class="btn btn-primary btn-lg" href="#" role="button">Узнать больше</a>
+    {% else %}
+        <p class="lead">Пожалуйста, войдите или зарегистрируйтесь, чтобы получить доступ ко всем функциям сайта.</p>
+        <hr class="my-4">
+        <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Войти</a>
+        <a class="btn btn-success btn-lg" href="{% url 'register' %}" role="button">Регистрация</a>
+    {% endif %}
+</div>
+{% endblock %}

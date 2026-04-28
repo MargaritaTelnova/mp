@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактирование профиля{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>Редактирование профиля</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">Имя</label>
+                        <input type="text" name="first_name" id="first_name" class="form-control" value="{{ user.first_name }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Фамилия</label>
+                        <input type="text" name="last_name" id="last_name" class="form-control" value="{{ user.last_name }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Телефон</label>
+                        <input type="text" name="phone" id="phone" class="form-control" value="{{ user.phone }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="birth_date" class="form-label">Дата рождения</label>
+                        <input type="date" name="birth_date" id="birth_date" class="form-control" value="{{ user.birth_date|date:'Y-m-d' }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">О себе</label>
+                        <textarea name="bio" id="bio" class="form-control" rows="4">{{ user.bio }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="avatar" class="form-label">Аватар</label>
+                        {% if user.avatar %}
+                            <div class="mb-2">
+                                <img src="{{ user.avatar.url }}" alt="Current avatar" style="width: 100px; height: 100px; border-radius: 50%;">
+                            </div>
+                        {% endif %}
+                        <input type="file" name="avatar" id="avatar" class="form-control" accept="image/*">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Сохранить изменения</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

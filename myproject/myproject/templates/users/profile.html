@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ profile_user.username }} - Профиль{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                {% if profile_user.avatar %}
+                    <img src="{{ profile_user.avatar.url }}" alt="Avatar" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-secondary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
+                        <span class="display-1 text-white">{{ profile_user.username|first|upper }}</span>
+                    </div>
+                {% endif %}
+                
+                <h3>{{ profile_user.get_full_name|default:profile_user.username }}</h3>
+                <p class="text-muted">@{{ profile_user.username }}</p>
+                
+                {% if not is_own_profile %}
+                    {% if is_friend %}
+                        <a href="{% url 'remove_friend' profile_user.username %}" class="btn btn-danger btn-sm">Удалить из друзей</a>
+                    {% else %}
+                        <a href="{% url 'add_friend' profile_user.username %}" class="btn btn-primary btn-sm">Добавить в друзья</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'edit_profile' %}" class="btn btn-primary btn-sm">Редактировать профиль</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Информация о пользователе</h4>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th>Имя пользователя:</th>
+                        <td>{{ profile_user.username }}</td>
+                    </tr>
+                    <tr>
+                        <th>Полное имя:</th>
+                        <td>{{ profile_user.get_full_name|default:"Не указано" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email:</th>
+                        <td>{{ profile_user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Телефон:</th>
+                        <td>{{ profile_user.phone|default:"Не указан" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Дата рождения:</th>
+                        <td>{{ profile_user.birth_date|default:"Не указана" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Дата регистрации:</th>
+                        <td>{{ profile_user.date_joined|date:"d.m.Y" }}</td>
+                    </tr>
+                    <tr>
+                        <th>О себе:</th>
+                        <td>{{ profile_user.bio|default:"Ничего не указано" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Друзья:</th>
+                        <td>
+                            {% with friends=profile_user.friends.all %}
+                                {{ friends.count }} 
+                                {% if friends.count > 0 %}
+                                    <button class="btn btn-link btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#friendsList">
+                                        Показать
+                                    </button>
+                                    <div class="collapse mt-2" id="friendsList">
+                                        <div class="list-group">
+                                            {% for friend in friends %}
+                                                <a href="{% url 'profile' friend.username %}" class="list-group-item list-group-item-action">
+                                                    {{ friend.get_full_name|default:friend.username }}
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
